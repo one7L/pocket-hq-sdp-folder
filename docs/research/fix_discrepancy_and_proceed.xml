@@ -1,0 +1,124 @@
+<task>
+  <title>Fix Discrepancy and Prepare for Phase 3</title>
+  
+  <context>
+    Discrepancy identified: Import script has 556 rows, batch deliverables specify 548. 8 extra services from research. No options needed — fix the script to 548, clean import, verify, proceed to Phase 3 (Onboarding UI).
+  </context>
+  
+  <instructions>
+    ## Task: Fix Script to 548 Services and Clean Import
+    
+    ### Step 1: Remove 8 Extra Services from Import Script
+    
+    Edit: scripts/import_all_services.sql
+    
+    Remove these 8 rows (from the 8 industries with extras):
+    - Landscaping: 2 extra services
+    - Tree Work: 1 extra service
+    - Masonry: 1 extra service
+    - Painting: 1 extra service
+    - Flooring: 1 extra service
+    - Carpentry: 1 extra service
+    - Windows/Doors: 1 extra service
+    
+    Total rows to remove: 8
+    Final row count: 548 (matching batch deliverables)
+    
+    Save updated script.
+    
+    ### Step 2: Create Clean Import Script
+    
+    Create: scripts/clean_import_exact_548.sql
+    
+    Content:
+    ```sql
+    -- Clean Import: 548 Services (Exact Match with Batch Deliverables)
+    -- Created: 2026-03-16
+    -- Purpose: TRUNCATE and reimport to align DB with research (548 services)
+    
+    -- Step 1: Truncate table
+    TRUNCATE master_service_library CASCADE;
+    
+    -- Step 2: Import from updated script
+    -- (Paste contents of scripts/import_all_services.sql here)
+    ```
+    
+    ### Step 3: Execute Clean Import in Supabase SQL Editor
+    
+    1. Open Supabase SQL Editor for project: pocket-hq-mobile-app
+    2. Run: TRUNCATE master_service_library CASCADE;
+    3. Run scripts/import_all_services.sql (updated to 548 services)
+    4. Verify: SELECT COUNT(*) FROM master_service_library; → Expected: 548
+    5. Verify: SELECT COUNT(DISTINCT industry) FROM master_service_library; → Expected: 19
+    6. Verify: SELECT COUNT(DISTINCT service_category) FROM master_service_library; → Expected: 104+
+    
+    ### Step 4: Create Verification Summary
+    
+    Create: docs/research/DATABASE_FIXED_548.md
+    
+    Content:
+    ```markdown
+    # Database Fixed: 548 Services
+    
+    ## Changes Made
+    
+    - Edited scripts/import_all_services.sql: Removed 8 extra services
+    - Created scripts/clean_import_exact_548.sql
+    - Truncated master_service_library CASCADE
+    - Reimported from updated script (548 services)
+    
+    ## Final State
+    
+    - Total Services: 548 ✓
+    - Industries: 19 ✓
+    - Categories: 104+ ✓
+    
+    ## Verification
+    
+    ```sql
+    SELECT COUNT(*) FROM master_service_library;
+    -- Result: 548
+    
+    SELECT COUNT(DISTINCT industry) FROM master_service_library;
+    -- Result: 19
+    
+    SELECT COUNT(DISTINCT service_category) FROM master_service_library;
+    -- Result: 104+
+    ```
+    
+    ## Status
+    
+    ✓ Database aligned with batch deliverables (548 services)
+    ✓ Ready for Phase 3: Build Onboarding UI
+    ```
+    
+    ### Step 5: Push Changes to GitHub
+    
+    Commit changes:
+    ```bash
+    git add scripts/import_all_services.sql scripts/clean_import_exact_548.sql docs/research/DATABASE_FIXED_548.md
+    git commit -m "Fix: Reduce import script from 556 to 548 services (match batch deliverables)"
+    git push origin master
+    ```
+  </instructions>
+  
+  <success_criteria>
+    - scripts/import_all_services.sql edited (556 → 548 rows)
+    - scripts/clean_import_exact_548.sql created
+    - Database truncated in Supabase SQL Editor
+    - Updated import script executed (548 services imported)
+    - COUNT(*) verified: 548
+    - Industries verified: 19
+    - Categories verified: 104+
+    - docs/research/DATABASE_FIXED_548.md created
+    - Changes committed and pushed to GitHub
+  </success_criteria>
+  
+  <next_phase>
+    <phase id="3">
+      <title>Build Onboarding UI</title>
+      <status>ready</status>
+      <prerequisites>Database fixed: 548 services imported, verified, aligned with batch deliverables</prerequisites>
+    </phase>
+  </next_phase>
+</task>
