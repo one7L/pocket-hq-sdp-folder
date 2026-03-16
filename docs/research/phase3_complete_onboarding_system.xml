@@ -1,0 +1,664 @@
+<task>
+  <title>Phase 3: Build Complete Onboarding System & First Feature</title>
+  
+  <context>
+    Service library complete: 556 services across 19 industries with regional multipliers. Database schema updated. Import complete. Ready to build onboarding system that guides users through signup, payment, batch selection, service configuration, template editing, and first feature (client management + estimate creation in under 10 minutes).
+  </context>
+  
+  <completed_phases>
+    - [x] Phase 1: Industry Classification (19 industries)
+    - [x] Phase 2: Service Library Research (556 services)
+    - [x] Phase 3: Database Schema Update (multi-region columns)
+    - [x] Phase 4: Import All Services (556 imported)
+  </completed_phases>
+  
+  <objectives>
+    Build seamless onboarding experience that:
+    1. Gets business owner fully onboarded in under 10 minutes
+    2. Guides user to input all required data to run their business
+    3. Provides baseline templates (materials, labor, overhead) for all 556 services
+    4. Allows user to edit pricing to reflect actual business
+    5. Enables client management (CSV import + manual) as first feature
+    6. Creates professional estimates/proposals (PDF generation)
+    7. Sends estimates via messages/email for signature/payment
+  </objectives>
+  
+  <system_requirements>
+    ## Signup & Account Creation
+    
+    Fields required:
+    - Full name
+    - Work email
+    - Work number
+    - Company name
+    - Company region (dropdown: Northeast, Southeast, Southwest, Midwest, Northwest)
+    
+    Account creation: Simple form → account access
+    
+    ## Payment Firewall
+    
+    Display before onboarding:
+    - Payment plans:
+      - Standard: $49/month
+      - Early Users: Lifetime access for $49/month
+    - Stripe payment link/button
+    - Payment acceptance → access to company account
+    - Payment rejection → payment firewall stays
+    
+    ## Onboarding Flow
+    
+    5 Batch Categories (multi-select):
+    1. Exterior & Outdoor Services (Landscaping, Tree Work, Masonry, Roofing)
+    2. Interior Trades (Painting, Flooring, Drywall, Carpentry)
+    3. Essential Systems (Plumbing, Electrical, HVAC, Insulation)
+    4. Structural & Building (Siding, Windows/Doors, Decking/Fencing)
+    5. Specialized Services (Cleaning, Pool, Gutter, Land Clearing)
+    
+    Per-Batch Service Selection:
+    - Select industries within batch
+    - Select services within industries
+    - Checkboxes for easy multi-select
+    - In-house vs subcontractor toggle per service
+    
+    Service Type Selection:
+    - inhouse_only: Service performed by team
+    - subcontracted_only: Service performed by subcontractor
+    - both: Both options available
+    
+    Progress Tracking:
+    - Circular button at bottom right corner
+    - Shows progress percentage (e.g., "Onboarding: 45%")
+    - Click → visualize all onboarding information
+    - Visual guide to completion
+    
+    Onboarding Completion:
+    - All batches checked
+    - All services selected
+    - Templates created/edited
+    - Pricing configured
+    - Progress: 100%
+    - Access granted to company dashboard
+    
+    ## Service Pricing Configuration
+    
+    Template System:
+    - 556 baseline templates from service library
+    - Each template includes:
+      - Service name
+      - Material pricing
+      - Labor pricing
+      - Overhead pricing
+    - User can use baseline or create custom templates
+    
+    Template Editing:
+    - Tap service → edit template
+    - Subitems per service:
+      - Material item
+      - Labor item
+      - Overhead item
+    - Edit pricing to reflect actual business
+    - Save template
+    
+    Template Guidance:
+    - Provide clear instruction: "We provide templates with subitems, materials, labor, overhead averages. You can use them as-is or edit to reflect your actual business."
+    - Baseline templates vs. custom templates
+    - More accurate edits = more accurate estimates
+    
+    ## Dashboard Access
+    
+    After onboarding complete:
+    - Full access to company dashboard
+    - All templates visible
+    - All services visible
+    - All subitems visible
+    - All pricing visible
+    - Easy price editing
+    - Hide/show detailed subitems (optional)
+    
+    ## First Feature: Client Management
+    
+    CSV Import:
+    - Upload CSV file with client list
+    - Parse and import clients
+    - Required fields: name, email, phone, address
+    
+    Manual Client Addition:
+    - Form to add single client
+    - Fields: name, email, phone, address, notes
+    
+    Client List:
+    - View all imported clients
+    - Search/filter clients
+    - Edit client details
+    - Delete clients
+    
+    ## Estimate Creation
+    
+    Create Estimate:
+    - Select client
+    - Select services from templates
+    - Add custom services (if needed)
+    - Calculate totals
+    - Generate estimate
+    
+    Proposal Generation:
+    - Clean and professional design
+    - Optional company logo (upload or skip)
+    - Show service descriptions
+    - Optionally show subitems with pricing
+    - Optionally hide subitems (show service only)
+    - Total pricing clear
+    
+    PDF Generation:
+    - Convert proposal to PDF
+    - Professional formatting
+    - Include company info
+    - Include client info
+    - Include services and pricing
+    
+    Send Estimate:
+    - Send via messages (integrated messaging system)
+    - Send via email
+    - Include PDF attachment
+    - Request signature
+    - Request payment
+    
+    Time Goal:
+    - Signup → 2 minutes
+    - Payment → 2 minutes
+    - Onboarding → 4 minutes
+    - Client import → 1 minute
+    - Estimate creation → 1 minute
+    - Total: 10 minutes
+  </system_requirements>
+  
+  <technical_requirements>
+    ## Database Schema Needed
+    
+    Tables required:
+    
+    1. users
+       - id
+       - full_name
+       - work_email (unique)
+       - work_number
+       - company_name
+       - company_region
+       - payment_status (pending, active, expired)
+       - created_at
+       - updated_at
+    
+    2. company_services
+       - id
+       - user_id (FK to users)
+       - service_id (FK to master_service_library)
+       - service_type (inhouse_only, subcontracted_only, both)
+       - region (Northeast, Southeast, Southwest, Midwest, Northwest)
+       - custom_price_cost (override default)
+       - custom_price (override default)
+       - created_at
+       - updated_at
+    
+    3. service_templates
+       - id
+       - user_id (FK to users)
+       - service_id (FK to master_service_library)
+       - template_name
+       - is_custom (boolean)
+       - created_at
+       - updated_at
+    
+    4. template_subitems
+       - id
+       - template_id (FK to service_templates)
+       - item_type (material, labor, overhead)
+       - item_name
+       - cost
+       - price
+       - quantity
+       - created_at
+       - updated_at
+    
+    5. clients
+       - id
+       - user_id (FK to users)
+       - name
+       - email
+       - phone
+       - address
+       - notes
+       - imported_from_csv (boolean)
+       - created_at
+       - updated_at
+    
+    6. estimates
+       - id
+       - user_id (FK to users)
+       - client_id (FK to clients)
+       - estimate_number
+       - status (draft, sent, viewed, signed, paid)
+       - subtotal
+       - tax
+       - total
+       - notes
+       - show_subitems (boolean)
+       - created_at
+       - updated_at
+    
+    7. estimate_services
+       - id
+       - estimate_id (FK to estimates)
+       - template_id (FK to service_templates)
+       - service_name
+       - description
+       - quantity
+       - unit_price
+       - subtotal
+       - created_at
+       - updated_at
+    
+    8. settings
+       - id
+       - user_id (FK to users)
+       - company_logo_url
+       - proposal_template_id
+       - show_subitems_by_default (boolean)
+       - default_region
+       - created_at
+       - updated_at
+    
+    ## Frontend Components Needed
+    
+    1. Signup Form (signup.tsx)
+       - Full name input
+       - Work email input
+       - Work number input
+       - Company name input
+       - Company region dropdown
+       - Submit button
+       - Validation
+    
+    2. Payment Firewall (payment-wall.tsx)
+       - Payment plans display
+       - Stripe integration
+       - Payment form
+       - Success/failure handling
+       - Access granted after payment
+    
+    3. Onboarding Wizard (onboarding-wizard.tsx)
+       - Step-by-step flow
+       - Batch selection (5 checkboxes)
+       - Industry selection (within batches)
+       - Service selection (within industries)
+       - In-house/subcontractor toggle (per service)
+       - Progress bar
+       - Next/Back buttons
+       - Completion state
+    
+    4. Template Editor (template-editor.tsx)
+       - Template selection
+       - Subitem list
+       - Subitem editing (material, labor, overhead)
+       - Cost/price inputs
+       - Save/Cancel buttons
+       - Guidance text
+    
+    5. Dashboard (dashboard.tsx)
+       - Template overview
+       - Service overview
+       - Client list
+       - Estimate list
+       - Quick actions
+       - Settings access
+    
+    6. Client Management (clients.tsx)
+       - CSV upload
+       - Manual add form
+       - Client list table
+       - Search/filter
+       - Edit/delete actions
+    
+    7. Estimate Creator (estimate-creator.tsx)
+       - Client selection
+       - Service selection
+       - Custom service addition
+       - Total calculation
+       - Save/Preview buttons
+    
+    8. Proposal Generator (proposal.tsx)
+       - Proposal preview
+       - Logo upload/display
+       - Service list
+       - Subitem visibility toggle
+       - PDF generation
+       - Send buttons (messages/email)
+    
+    ## API Endpoints Needed
+    
+    1. Authentication
+       - POST /api/auth/signup
+       - POST /api/auth/login
+       - GET /api/auth/me
+    
+    2. Payments
+       - POST /api/payments/create-checkout-session
+       - GET /api/payments/status
+       - POST /api/payments/webhook
+    
+    3. Onboarding
+       - GET /api/onboarding/batches
+       - GET /api/onboarding/industries/:batch
+       - GET /api/onboarding/services/:industry
+       - POST /api/onboarding/save-services
+    
+    4. Templates
+       - GET /api/templates
+       - GET /api/templates/:id
+       - POST /api/templates
+       - PUT /api/templates/:id
+       - DELETE /api/templates/:id
+       - GET /api/templates/:id/subitems
+       - POST /api/templates/:id/subitems
+       - PUT /api/templates/:id/subitems/:subitemId
+       - DELETE /api/templates/:id/subitems/:subitemId
+    
+    5. Clients
+       - GET /api/clients
+       - GET /api/clients/:id
+       - POST /api/clients
+       - PUT /api/clients/:id
+       - DELETE /api/clients/:id
+       - POST /api/clients/import-csv
+    
+    6. Estimates
+       - GET /api/estimates
+       - GET /api/estimates/:id
+       - POST /api/estimates
+       - PUT /api/estimates/:id
+       - DELETE /api/estimates/:id
+       - POST /api/estimates/:id/services
+       - PUT /api/estimates/:id/services/:serviceId
+       - DELETE /api/estimates/:id/services/:serviceId
+       - GET /api/estimates/:id/pdf
+    
+    7. Settings
+       - GET /api/settings
+       - PUT /api/settings
+       - POST /api/settings/logo
+  </technical_requirements>
+  
+  <instructions>
+    ## Task: Build Complete Onboarding System & First Feature
+    
+    ### Step 1: Design Database Schema
+    
+    Create migration file: migrations/20260316_phase3_onboarding_schema.sql
+    
+    Create tables:
+    - users
+    - company_services
+    - service_templates
+    - template_subitems
+    - clients
+    - estimates
+    - estimate_services
+    - settings
+    
+    Add foreign keys and indexes
+    
+    Run migration in Supabase SQL Editor
+    
+    ### Step 2: Build Signup & Authentication
+    
+    Create: src/features/auth/signup.tsx
+    
+    Features:
+    - Signup form (full name, work email, work number, company name, company region)
+    - Form validation
+    - Error handling
+    - Submit to API
+    - Redirect to payment wall on success
+    
+    Create: src/features/auth/login.tsx
+    
+    Features:
+    - Login form (email, password)
+    - Remember me checkbox
+    - Submit to API
+    - Redirect to dashboard on success
+    
+    ### Step 3: Build Payment Firewall
+    
+    Create: src/features/payment/payment-wall.tsx
+    
+    Features:
+    - Display payment plans ($49/month, lifetime access $49/month)
+    - Stripe checkout button
+    - Payment processing
+    - Success/failure handling
+    - Redirect to onboarding on payment success
+    
+    Integrate Stripe:
+    - Install Stripe SDK
+    - Create checkout session
+    - Handle webhook
+    
+    ### Step 4: Build Onboarding Wizard
+    
+    Create: src/features/onboarding/onboarding-wizard.tsx
+    
+    Features:
+    - Step 1: Batch selection (5 checkboxes)
+    - Step 2: Industry selection (within selected batches)
+    - Step 3: Service selection (within selected industries)
+    - Step 4: Service type selection (in-house/subcontractor toggle)
+    - Progress tracking (circular button at bottom right)
+    - Visual guide to completion
+    - Save/Next buttons
+    - Navigation (Next/Back)
+    - Completion state (100% → dashboard access)
+    
+    Create: src/features/onboarding/batch-selection.tsx
+    - 5 batch checkboxes
+    - Select/deselect all buttons
+    
+    Create: src/features/onboarding/service-selection.tsx
+    - Industry cards
+    - Service checkboxes
+    - In-house/subcontractor toggle
+    
+    Create: src/features/onboarding/progress-button.tsx
+    - Circular progress button
+    - Percentage display
+    - Click → onboarding summary
+    
+    ### Step 5: Build Template System
+    
+    Create: src/features/templates/template-editor.tsx
+    
+    Features:
+    - Select service from master_service_library
+    - Load baseline template (if exists)
+    - Display subitems (material, labor, overhead)
+    - Edit subitem details
+    - Add/remove subitems
+    - Save template
+    - Guidance text
+    
+    Create: src/features/templates/template-list.tsx
+    
+    Features:
+    - List all templates
+    - Search/filter templates
+    - Edit template action
+    - Create custom template action
+    
+    Create: src/features/templates/subitem-editor.tsx
+    
+    Features:
+    - Item type dropdown (material, labor, overhead)
+    - Item name input
+    - Cost input
+    - Price input
+    - Quantity input
+    - Save/Cancel buttons
+    
+    ### Step 6: Build Dashboard
+    
+    Create: src/features/dashboard/dashboard.tsx
+    
+    Features:
+    - Template overview (count, last edited)
+    - Service overview (selected services count)
+    - Client list preview (count, recent)
+    - Estimate list preview (count, recent)
+    - Quick action buttons
+    - Onboarding progress (if incomplete)
+    
+    ### Step 7: Build Client Management (First Feature)
+    
+    Create: src/features/clients/clients.tsx
+    
+    Features:
+    - CSV upload button
+    - Add client form
+    - Client list table
+    - Search/filter clients
+    - Edit client details
+    - Delete client action
+    - Pagination
+    
+    Create: src/features/clients/client-form.tsx
+    
+    Features:
+    - Client details form
+    - Fields: name, email, phone, address, notes
+    - Validation
+    - Save/Cancel buttons
+    
+    Create: src/features/clients/csv-import.tsx
+    
+    Features:
+    - CSV file upload
+    - Parse CSV
+    - Validate fields
+    - Preview data
+    - Confirm import
+    
+    ### Step 8: Build Estimate Creator
+    
+    Create: src/features/estimates/estimate-creator.tsx
+    
+    Features:
+    - Client selection dropdown
+    - Service selection (from templates)
+    - Custom service addition
+    - Quantity inputs
+    - Unit price display
+    - Subtotal calculation
+    - Tax calculation
+    - Total calculation
+    - Save/Preview buttons
+    
+    Create: src/features/estimates/estimate-list.tsx
+    
+    Features:
+    - List all estimates
+    - Search/filter estimates
+    - Status badges (draft, sent, viewed, signed, paid)
+    - Edit/Delete actions
+    - Create new estimate button
+    
+    ### Step 9: Build Proposal Generator
+    
+    Create: src/features/proposals/proposal.tsx
+    
+    Features:
+    - Proposal preview
+    - Company logo display (upload or default)
+    - Show/hide subitems toggle
+    - Service list with pricing
+    - Subtotal, tax, total display
+    - Generate PDF button
+    - Send via messages button
+    - Send via email button
+    
+    Create: src/features/proposals/pdf-generator.tsx
+    
+    Features:
+    - PDF generation from proposal data
+    - Professional formatting
+    - Include company logo
+    - Include client info
+    - Include services and pricing
+    - Include subitems (if enabled)
+    
+    ### Step 10: Integrate Features
+    
+    Create routing:
+    - /signup
+    - /login
+    - /payment
+    - /onboarding
+    - /dashboard
+    - /templates
+    - /clients
+    - /estimates
+    - /proposals
+    
+    Update navigation:
+    - Add onboarding progress indicator
+    - Add dashboard link
+    - Add templates link
+    - Add clients link
+    - Add estimates link
+    - Add proposals link
+    
+    ### Step 11: Test Complete Flow
+    
+    Test signup → payment → onboarding → dashboard → client import → estimate creation → proposal generation → PDF generation → send estimate
+    
+    Verify:
+    - Signup creates account
+    - Payment grants access
+    - Onboarding completes in under 10 minutes
+    - Templates save correctly
+    - Clients import correctly
+    - Estimates calculate correctly
+    - Proposals generate PDF correctly
+    - Send functionality works
+    
+    ### Step 12: Push to GitHub
+    
+    Commit all changes:
+    ```bash
+    git add .
+    git commit -m "Phase 3: Complete onboarding system and first feature (client management + estimates)"
+    git push origin master
+    ```
+  </instructions>
+  
+  <success_criteria>
+    - Database schema migration created (8 tables: users, company_services, service_templates, template_subitems, clients, estimates, estimate_services, settings)
+    - Signup form created and functional
+    - Payment firewall created and integrated with Stripe
+    - Onboarding wizard created (batch selection, service selection, in-house/subcontractor toggle, progress tracking)
+    - Template system created (template editor, template list, subitem editor)
+    - Dashboard created (overview of templates, services, clients, estimates)
+    - Client management created (CSV import, manual add, client list)
+    - Estimate creator created (client selection, service selection, calculations)
+    - Proposal generator created (preview, logo, subitem toggle, PDF generation, send)
+    - All features integrated and functional
+    - Complete flow tested (signup → payment → onboarding → dashboard → client → estimate → proposal → PDF → send)
+    - Time goal met: onboarding + first feature usable in under 10 minutes
+    - Changes committed and pushed to GitHub
+  </success_criteria>
+  
+  <next_phase>
+    <phase id="4">
+      <title>Enhance & Optimize</title>
+      <status>pending</status>
+      <prerequisites>Phase 3 complete: Onboarding system, client management, estimates, proposals all functional</prerequisites>
+    </phase>
+  </next_phase>
+</task>
