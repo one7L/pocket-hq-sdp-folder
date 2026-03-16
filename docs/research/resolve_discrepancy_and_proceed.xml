@@ -1,0 +1,311 @@
+<task>
+  <title>Resolve 556 vs 548 Discrepancy and Proceed to Phase 3</title>
+  
+  <context>
+    Discrepancy already identified: Import script has 556 rows, research specifies 548. 8 extra services distributed across 7 industries: Landscaping (+2), Tree Work (+1), Masonry (+1), Painting (+1), Flooring (+1), Carpentry (+1), Windows/Doors (+1). Database has 556 services. Need to decide how to handle and implement decision, then prepare for Phase 3 (Onboarding UI).
+  </context>
+  
+  <current_state>
+    ## Discrepancy Summary
+    
+    - Expected: 548 services (research/batch docs)
+    - Actual: 556 services (import script/database)
+    - Discrepancy: 8 extra services
+    
+    ## 8 Extra Services Distribution
+    
+    | Industry | Script Rows | Expected | Diff |
+    |-----------|-------------|-----------|-------|
+    | Landscaping / Lawn Care | 37 | 35 | +2 |
+    | Tree Work / Arboriculture | 32 | 31 | +1 |
+    | Masonry / Hardscaping | 34 | 33 | +1 |
+    | Roofing | 35 | 35 | 0 |
+    | Painting | 33 | 32 | +1 |
+    | Flooring | 31 | 30 | +1 |
+    | Drywall | 27 | 27 | 0 |
+    | Carpentry / Remodeling | 31 | 30 | +1 |
+    | Plumbing - Land Clearing | — | — | 0 |
+    | Windows / Doors | 34 | 33 | +1 |
+    | **Total** | **556** | **548** | **+8** |
+    
+    Root Cause: Import script (scripts/import_all_services.sql) has 8 more rows than research files
+    NOT from: Duplicate INSERTs or pre-existing rows
+  </current_state>
+  
+  <instructions>
+    ## Task: Decide on Discrepancy Resolution and Implement
+    
+    ### Step 1: Choose Resolution Option
+    
+    Review these 3 options and choose one:
+    
+    #### Option A: Keep 556 Services
+    
+    **Condition:** Safe if all 8 extras are legitimate services
+    
+    **Pros:**
+    - No work required
+    - Maintains current database state
+    - Quick path to Phase 3
+    
+    **Cons:**
+    - Script and research out of sync
+    - Future inconsistency risk
+    - Documentation says 548, DB has 556
+    
+    **Action:** No changes needed
+    **Decision:** Accept or Reject?
+    
+    ---
+    
+    #### Option B: Clean Import for Exact 548 (RECOMMENDED)
+    
+    **Condition:** Align script with research, ensure long-term consistency
+    
+    **Pros:**
+    - Codebase and DB aligned with research (548)
+    - Future imports stay consistent
+    - Documentation matches database state
+    - Eliminates long-term sync issues
+    
+    **Cons:**
+    - Requires script edit (8 rows)
+    - Requires TRUNCATE + reimport
+    - Additional time investment
+    
+    **Action Required:**
+    1. Edit scripts/import_all_services.sql to remove 8 identified rows
+    2. Create scripts/clean_import_exact_548.sql
+    3. Execute: TRUNCATE master_service_library CASCADE;
+    4. Run updated import script
+    5. Verify: COUNT(*) = 548
+    
+    **Decision:** Accept or Reject?
+    
+    ---
+    
+    #### Option C: Delete 8 Services in Database
+    
+    **Condition:** Only if 8 are clearly identified and not referenced by price_book_items or other FKs
+    
+    **Pros:**
+    - Quick fix
+    - No script edit
+    
+    **Cons:**
+    - Script still out of sync
+    - FK constraint risks
+    - Future imports will re-add extras
+    
+    **Action Required:**
+    1. Check for FK dependencies
+    2. Create scripts/delete_8_extra_services.sql
+    3. Run DELETE statements
+    4. Verify: COUNT(*) = 548
+    
+    **Decision:** Accept or Reject?
+    
+    ---
+    
+    ### Step 2: Implement Chosen Option
+    
+    **If Option A Chosen (Keep 556):**
+    
+    Update: docs/research/PHASE2_CHUNKED_IMPORT_PROGRESS.md
+    
+    Add:
+    ## Discrepancy Resolution
+    
+    Issue: 556 services imported vs. 548 expected (8 extra)
+    Root cause: Import script had 8 more rows than research files
+    Action taken: Option A (Keep 556)
+    - Decision: 8 extra services are legitimate additions
+    - No action taken on database or script
+    - Proceed to Phase 3 (Onboarding UI)
+    
+    ---
+    
+    **If Option B Chosen (Clean Import):**
+    
+    Edit: scripts/import_all_services.sql
+    - Remove 8 identified extra services
+    - Save with 548 services
+    
+    Create: scripts/clean_import_exact_548.sql
+    ```sql
+    -- Clean Import: 548 Services (Exact Match with Research)
+    -- Created: [Current date]
+    -- Purpose: TRUNCATE and reimport to align DB with research (548 services)
+    
+    -- Step 1: Truncate table
+    TRUNCATE master_service_library CASCADE;
+    
+    -- Step 2: Import from updated script
+    -- Run scripts/import_all_services.sql (updated to 548 services)
+    ```
+    
+    Add execution instructions:
+    ```markdown
+    # Clean Import Instructions
+    
+    1. Open Supabase SQL Editor for project: pocket-hq-mobile-app
+    2. Run: TRUNCATE master_service_library CASCADE;
+    3. Run scripts/import_all_services.sql (updated with 548 services)
+    4. Verify: SELECT COUNT(*) FROM master_service_library; → Expected: 548
+    5. Verify: SELECT COUNT(DISTINCT industry) FROM master_service_library; → Expected: 19
+    6. Verify: SELECT COUNT(DISTINCT service_category) FROM master_service_library; → Expected: 104+
+    ```
+    
+    Update: docs/research/PHASE2_CHUNKED_IMPORT_PROGRESS.md
+    Add section:
+    ## Discrepancy Resolution
+    
+    Issue: 556 services imported vs. 548 expected (8 extra)
+    Root cause: Import script had 8 more rows than research files
+    Action taken: Option B (Clean Import)
+    - Edited scripts/import_all_services.sql to remove 8 rows
+    - Created scripts/clean_import_exact_548.sql
+    - Truncated and reimported to achieve exact 548 services
+    - Final state: 548 services in database (matching research)
+    
+    ---
+    
+    **If Option C Chosen (Delete 8 Services):**
+    
+    Create: scripts/delete_8_extra_services.sql
+    ```sql
+    -- Delete 8 Extra Services (Alternative to Clean Import)
+    -- Created: [Current date]
+    -- Purpose: Delete 8 identified extra services from database
+    -- Warning: Run only after backup/verification and FK dependency check
+    
+    DELETE FROM master_service_library
+    WHERE (service_name, industry) IN (
+      ('[Service Name 1]', 'Landscaping / Lawn Care'),
+      ('[Service Name 2]', 'Landscaping / Lawn Care'),
+      ('[Service Name 3]', 'Tree Work / Arboriculture'),
+      ('[Service Name 4]', 'Masonry / Hardscaping'),
+      ('[Service Name 5]', 'Painting'),
+      ('[Service Name 6]', 'Flooring'),
+      ('[Service Name 7]', 'Carpentry / Remodeling'),
+      ('[Service Name 8]', 'Windows / Doors')
+    );
+    
+    -- Verify: SELECT COUNT(*) FROM master_service_library; → Expected: 548
+    ```
+    
+    Add execution instructions:
+    ```markdown
+    # Delete 8 Extra Services Instructions
+    
+    1. Check for foreign key dependencies before running
+    2. Backup database before DELETE operation
+    3. Run this script in Supabase SQL Editor
+    4. Run verification queries after DELETE
+    5. Only use if Option B (clean import) is not feasible
+    ```
+    
+    Update: docs/research/PHASE2_CHUNKED_IMPORT_PROGRESS.md
+    Add section:
+    ## Discrepancy Resolution
+    
+    Issue: 556 services imported vs. 548 expected (8 extra)
+    Root cause: Import script had 8 more rows than research files
+    Action taken: Option C (Delete 8 Services)
+    - Checked for FK dependencies
+    - Created scripts/delete_8_extra_services.sql
+    - Deleted 8 extra services from database
+    - Final state: 548 services in database (matching research)
+    
+    ---
+    
+    ### Step 3: Prepare for Phase 3 (Onboarding UI)
+    
+    After implementing chosen option, verify database state:
+    
+    Run verification queries:
+    ```sql
+    -- Total services
+    SELECT COUNT(*) FROM master_service_library;
+    -- Expected: 548 (if B or C) or 556 (if A)
+    
+    -- All industries
+    SELECT COUNT(DISTINCT industry) FROM master_service_library;
+    -- Expected: 19
+    
+    -- Service categories
+    SELECT COUNT(DISTINCT service_category) FROM master_service_library;
+    -- Expected: 104+
+    
+    -- Verify no duplicates
+    SELECT service_name, industry, COUNT(*) as count
+    FROM master_service_library
+    GROUP BY service_name, industry
+    HAVING COUNT(*) > 1;
+    -- Expected: 0 rows
+    
+    -- Verify no NULL fields
+    SELECT * FROM master_service_library
+    WHERE service_name IS NULL 
+       OR service_category IS NULL 
+       OR industry IS NULL 
+       OR midwest_cost IS NULL 
+       OR midwest_price IS NULL;
+    -- Expected: 0 rows
+    ```
+    
+    Create: docs/research/PRE_PHASE3_READINESS.md
+    
+    Format:
+    ```markdown
+    # Phase 3 Readiness: Build Onboarding UI
+    
+    ## Database State Verification
+    
+    - Total Services: [N] (548 or 556 based on chosen option)
+    - Industries: 19
+    - Categories: 104+
+    - Duplicates: 0
+    - NULL Fields: 0
+    
+    ## Discrepancy Resolution
+    
+    Chosen Option: [A/B/C]
+    
+    Implementation: [Brief description of what was done]
+    
+    Final Database State: [548 or 556 services]
+    
+    ## Ready for Phase 3
+    
+    Status: READY
+    
+    Next Phase: Build Onboarding UI
+    
+    Prerequisites Met:
+    - [x] Database schema updated (multi-region columns)
+    - [x] All services imported (548 or 556)
+    - [x] Discrepancy resolved and documented
+    - [x] Data quality verified
+    ```
+  </instructions>
+  
+  <success_criteria>
+    - Resolution option chosen (A/B/C)
+    - Option implemented:
+      - If A: Progress doc updated with decision
+      - If B: Script edited, clean import script created, TRUNCATE + reimport executed
+      - If C: Delete script created, executed, verified
+    - Database state verified (COUNT(*), industries, categories, duplicates, NULLs)
+    - Phase 3 readiness doc created (PRE_PHASE3_READINESS.md)
+    - Clear path to Phase 3 (Onboarding UI) with discrepancy resolved
+  </success_criteria>
+  
+  <next_phase>
+    <phase id="3">
+      <title>Build Onboarding UI</title>
+      <status>pending</status>
+      <prerequisites>Discrepancy resolved: Database has consistent state (548 or 556) and documented</prerequisites>
+    </phase>
+  </next_phase>
+</task>
