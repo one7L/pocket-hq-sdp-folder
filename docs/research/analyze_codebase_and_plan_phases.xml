@@ -1,0 +1,453 @@
+<task>
+  <title>Analyze Current Codebase State & Define Next Phases</title>
+  
+  <context>
+    Comprehensive PRDs completed on March 14, 2026: Tech stack, competitors, target audience, features, frontend PRD (23 screens), backend PRD (25 tables + 25 API endpoints), database PRD (complete schema).
+    
+    Current session (March 16, 2026): Service library research complete (556 services across 19 industries), regional multipliers documented, discrepancy resolved (keep 556), onboarding system designed for Phase 3.
+    
+    Need to: Analyze actual Pocket.HQ codebase (https://github.com/one7L/Pocket.HQ.git) against PRD specifications, identify gaps, define next development phases.
+  </context>
+  
+  <existing_prds>
+    ## March 14, 2026 - Complete PRDs
+    
+    ### CodeSpring Components (4/4 Complete)
+    
+    1. **Tech Stack** ✅
+       - React Native (Expo SDK 51+)
+       - EAS Build (iOS App Store + Google Play Store)
+       - Supabase (PostgreSQL, Auth, Realtime, Storage)
+       - Stripe integration + manual payments
+       - Role-Based Access Control (Admin, Team Lead, Helper)
+    
+    2. **Competitor Features** ✅
+       - 9 competitors analyzed: ServiceTitan, Jobber, Housecall Pro, LMN, JobNimbus, ArborNote, ColorSnap, Contractor Foreman, Plumbing Pro
+       - 10 unique differentiators identified
+    
+    3. **Target Audience** ✅
+       - 4 customer segments: Solo, Small, Medium, Growing
+       - ICP persona: "Sarah Service Business Owner"
+       - 10 pain points documented
+       - 7 value propositions
+    
+    4. **Features** ✅
+       - 10 categories: Authentication, CRM, Estimates, Scheduling, Team, Time Tracking, Invoicing, Change Orders, Materials/Inventory, Admin
+       - 48 total features (40 MVP, 5 Phase 2, 3 Phase 3)
+       - Complete workflow documented
+    
+    ### PRDs (3/3 Complete)
+    
+    5. **Frontend PRD** ✅
+       - 23 screens + 3 modals + 1 component
+       - File-based routing (Expo Router)
+       - State management (Zustand)
+       - Component library
+    
+    6. **Backend PRD** ✅
+       - 25 database tables
+       - 25 API endpoints
+       - RLS policies for company isolation
+       - Stripe Edge Functions
+    
+    7. **Database PRD** ✅
+       - Complete schema with ERD
+       - 18 indexes for performance
+       - Migration strategy
+       - Testing strategy
+    
+    ## Current Session (March 16, 2026)
+    
+    8. **Service Library Research** ✅
+       - 556 services across 19 industries
+       - Regional multipliers: NE 1.15, SE 0.92, SW 1.025, MW 1.00, NW 1.135
+       - Database schema updated (multi-region columns)
+       - Import complete (556 services)
+    
+    9. **Onboarding System Design** ✅
+       - 5 batch categories designed
+       - Per-batch service selection
+       - In-house/subcontractor toggle per service
+       - Progress tracking designed
+       - Template system designed
+  </existing_prds>
+  
+  <instructions>
+    ## Task: Analyze Codebase & Define Next Phases
+    
+    ### Step 1: Analyze Pocket.HQ Codebase Structure
+    
+    Access: https://github.com/one7L/Pocket.HQ.git
+    
+    Analyze:
+    
+    1. **Project Structure**
+       - Frontend directory: React Native, Expo?
+       - Backend directory: Supabase functions?
+       - Database migrations: Present?
+       - Routing: Configured?
+       - State management: Implemented?
+    
+    2. **Frontend Implementation Status**
+       - Screens implemented: Count and list
+       - Screens pending: Count and list
+       - Navigation: File-based or app-based?
+       - Authentication: Supabase Auth integrated?
+       - State management: Zustand implemented?
+    
+    3. **Backend Implementation Status**
+       - Supabase project: Configured?
+       - Database tables: Which ones created?
+       - API endpoints: Which ones implemented?
+       - RLS policies: Applied?
+       - Stripe integration: Connected?
+    
+    4. **Service Library Integration**
+       - master_service_library table: Exists with 556 services?
+       - Regional pricing columns: Present?
+       - Indexes: Created?
+       - Industry templates: Implemented?
+    
+    5. **Authentication System**
+       - Signup flow: Implemented?
+       - Login flow: Implemented?
+       - Role-based access: Implemented?
+       - Company profile: Created?
+    
+    6. **Gap Analysis**
+       - Compare PRD specifications to actual implementation
+       - Identify what's missing
+       - Identify what's partially implemented
+       - Identify what's complete
+    
+    ### Step 2: Create Implementation Status Report
+    
+    Create: docs/research/CODEBASE_IMPLEMENTATION_STATUS.md
+    
+    Format:
+    ```markdown
+    # Codebase Implementation Status Report
+    
+    ## Frontend Status
+    
+    ### Screens Implemented
+    [List screens that exist]
+    
+    ### Screens Pending
+    [List screens from PRD that don't exist]
+    
+    ### Infrastructure Status
+    - Routing: [Implemented/Not implemented]
+    - State Management: [Implemented/Not implemented]
+    - Component Library: [Implemented/Not implemented]
+    - Supabase Auth: [Integrated/Not integrated]
+    
+    ## Backend Status
+    
+    ### Database Tables Created
+    [List tables that exist]
+    
+    ### Database Tables Pending
+    [List tables from PRD that don't exist]
+    
+    ### API Endpoints Implemented
+    [List endpoints that exist]
+    
+    ### API Endpoints Pending
+    [List endpoints from PRD that don't exist]
+    
+    ### RLS Policies Applied
+    [List policies that exist]
+    
+    ### RLS Policies Pending
+    [List policies from PRD that don't exist]
+    
+    ### Stripe Integration
+    - Status: [Integrated/Not integrated]
+    - Edge Functions: [Created/Not created]
+    
+    ## Service Library Integration
+    
+    ### master_service_library Table
+    - Status: [Exists/Not exists]
+    - Services Loaded: [556/Pending]
+    - Regional Columns: [Present/Not present]
+    - Indexes: [Created/Not created]
+    
+    ## Gap Analysis
+    
+    ### Major Gaps
+    [List critical missing components]
+    
+    ### Minor Gaps
+    [List non-critical missing components]
+    
+    ### Implementation Priority
+    [Rank gaps by priority: High/Medium/Low]
+    ```
+    
+    ### Step 3: Define Next Development Phases
+    
+    Based on gap analysis, define next phases:
+    
+    **Phase 1: Foundation Setup (if not complete)**
+    - Supabase project setup
+    - Database migrations
+    - RLS policies
+    - Stripe integration
+    
+    **Phase 2: Authentication & User Management (if not complete)**
+    - Signup flow
+    - Login flow
+    - Company profile
+    - Role-based access
+    
+    **Phase 3: Service Library Integration (if not complete)**
+    - Import 556 services
+    - Regional pricing system
+    - Industry templates
+    - Service selection UI
+    
+    **Phase 4: Onboarding System (if not complete)**
+    - Batch selection (5 categories)
+    - Service selection
+    - In-house/subcontractor toggle
+    - Template configuration
+    - Progress tracking
+    
+    **Phase 5: Core Features (CRM, Estimates)**
+    - Client management
+    - Estimate creation
+    - Proposal generation
+    
+    **Phase 6: Advanced Features (Jobs, Time Tracking, Invoicing)**
+    - Job scheduling
+    - Time tracking
+    - Change orders
+    - Invoicing
+    
+    **Phase 7: Testing & Deployment**
+    - End-to-end testing
+    - EAS build
+    - App Store submission
+    - Play Store submission
+    
+    ### Step 4: Create Phase Planning Document
+    
+    Create: docs/research/NEXT_PHASES_PLAN.md
+    
+    Format:
+    ```markdown
+    # Next Phases Plan - PocketHQ Development
+    
+    ## Current State
+    
+    Codebase Status: [Analyzed in Step 1]
+    Gaps Identified: [Analyzed in Step 2]
+    
+    ## Phase 1: Foundation Setup
+    
+    Status: [Ready to Start/In Progress/Complete]
+    
+    Tasks:
+    - [ ] Supabase project setup
+    - [ ] Database migrations (25 tables)
+    - [ ] RLS policies (company isolation)
+    - [ ] Stripe integration
+    
+    Timeline: 1 week
+    
+    Success Criteria:
+    - All 25 tables created
+    - RLS policies applied
+    - Stripe connected
+    
+    ## Phase 2: Authentication & User Management
+    
+    Status: [Not Started]
+    
+    Tasks:
+    - [ ] Signup flow (full name, email, phone, company, region)
+    - [ ] Login flow
+    - [ ] Company profile creation
+    - [ ] Role-based access (Admin, Team Lead, Helper)
+    
+    Timeline: 1 week
+    
+    Success Criteria:
+    - Users can signup
+    - Users can login
+    - Company profiles created
+    - Roles enforced
+    
+    ## Phase 3: Service Library Integration
+    
+    Status: [Not Started]
+    
+    Tasks:
+    - [ ] Import 556 services to master_service_library
+    - [ ] Regional pricing UI (5 regions)
+    - [ ] Industry templates system
+    - [ ] Service selection interface
+    - [ ] In-house/subcontractor toggle
+    
+    Timeline: 1 week
+    
+    Success Criteria:
+    - 556 services accessible
+    - Regional pricing working
+    - Templates configured
+    - Selection functional
+    
+    ## Phase 4: Onboarding System
+    
+    Status: [Not Started]
+    
+    Tasks:
+    - [ ] Batch selection (5 categories)
+    - [ ] Per-batch service selection
+    - [ ] Progress tracking (circular button)
+    - [ ] Template configuration
+    - [ ] Completion state detection
+    
+    Timeline: 2 weeks
+    
+    Success Criteria:
+    - Users can select batches
+    - Users can select services
+    - Progress tracked
+    - Templates configured
+    
+    ## Phase 5: Core Features
+    
+    Status: [Not Started]
+    
+    Tasks:
+    - [ ] Client management (add, edit, delete)
+    - [ ] Estimate creation (services + sub items)
+    - [ ] Proposal generation (PDF)
+    - [ ] Send proposals (email, messages)
+    
+    Timeline: 2 weeks
+    
+    Success Criteria:
+    - Client CRUD working
+    - Estimates created
+    - Proposals generated
+    - Sending functional
+    
+    ## Phase 6: Advanced Features
+    
+    Status: [Not Started]
+    
+    Tasks:
+    - [ ] Job scheduling
+    - [ ] Time tracking (clock in/out)
+    - [ ] Change orders (material, labor, equipment, overhead)
+    - [ ] Invoicing (generate from jobs)
+    - [ ] Materials tracking (inventory depletion)
+    
+    Timeline: 2 weeks
+    
+    Success Criteria:
+    - Jobs scheduled
+    - Time tracked
+    - Change orders created
+    - Invoices generated
+    - Materials tracked
+    
+    ## Phase 7: Testing & Deployment
+    
+    Status: [Not Started]
+    
+    Tasks:
+    - [ ] End-to-end testing (all workflows)
+    - [ ] EAS build configuration
+    - [ ] iOS App Store submission
+    - [ ] Google Play Store submission
+    
+    Timeline: 1 week
+    
+    Success Criteria:
+    - All workflows tested
+    - EAS build successful
+    - App Store approved
+    - Play Store approved
+    
+    ## Overall Timeline
+    
+    Phase 1: 1 week
+    Phase 2: 1 week
+    Phase 3: 1 week
+    Phase 4: 2 weeks
+    Phase 5: 2 weeks
+    Phase 6: 2 weeks
+    Phase 7: 1 week
+    
+    **Total: 10 weeks**
+    
+    ## Priority Order
+    
+    1. Phase 1: Foundation Setup (blocking)
+    2. Phase 2: Authentication & User Management (blocking)
+    3. Phase 3: Service Library Integration (blocking)
+    4. Phase 4: Onboarding System (high priority)
+    5. Phase 5: Core Features (high priority)
+    6. Phase 6: Advanced Features (medium priority)
+    7. Phase 7: Testing & Deployment (critical for launch)
+    ```
+    
+    ### Step 5: Push Documentation to GitHub
+    
+    Create: docs/research/PHASE_PLANNING_COMPLETE.md
+    
+    Content:
+    ```markdown
+    # Phase Planning Complete
+    
+    ## Analysis Complete
+    
+    - Codebase implementation status: [See CODEBASE_IMPLEMENTATION_STATUS.md]
+    - Gap analysis: [See CODEBASE_IMPLEMENTATION_STATUS.md]
+    - Next phases defined: [See NEXT_PHASES_PLAN.md]
+    
+    ## Ready for Development
+    
+    Status: READY
+    
+    Next Step: Begin Phase 1 (Foundation Setup)
+    
+    ## Files Created
+    
+    1. CODEBASE_IMPLEMENTATION_STATUS.md
+    2. NEXT_PHASES_PLAN.md
+    3. PHASE_PLANNING_COMPLETE.md
+    ```
+    
+    Commit changes:
+    ```bash
+    git add docs/research/CODEBASE_IMPLEMENTATION_STATUS.md docs/research/NEXT_PHASES_PLAN.md docs/research/PHASE_PLANNING_COMPLETE.md
+    git commit -m "Phase planning complete: Codebase analysis, gap analysis, next phases defined"
+    git push origin master
+    ```
+  </instructions>
+  
+  <success_criteria>
+    - Pocket.HQ codebase accessed and analyzed (structure, frontend, backend, database)
+    - Implementation status report created (CODEBASE_IMPLEMENTATION_STATUS.md)
+    - Gap analysis complete (what's implemented vs. what's missing)
+    - Next phases defined (7 phases with tasks, timelines, success criteria)
+    - Phase planning document created (NEXT_PHASES_PLAN.md)
+    - Overall timeline estimated (10 weeks)
+    - Priority order established
+    - Documentation committed and pushed to GitHub
+  </success_criteria>
+  
+  <next_phase>
+    <phase id="1">
+      <title>Foundation Setup</title>
+      <status>pending</status>
+      <prerequisites>Codebase analysis complete, gap analysis complete, phases planned</prerequisites>
+    </phase>
+  </next_phase>
+</task>
